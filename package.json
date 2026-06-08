@@ -1,9 +1,10 @@
 {
-  "name": "minha-api",
+  "name": "engi-uffs",
   "version": "1.0.0",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "db:migrate": "npx sequelize-cli db:migrate"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
