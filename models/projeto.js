@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    engenheiroId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     endereco: {
       type: DataTypes.STRING,
       allowNull: true
@@ -34,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.STRING,
       allowNull: true,
-      defaultValue: 'EM_ANDAMENTO'
+      defaultValue: 'Em execução'
     }
   }, {
     tableName: 'projetos',
@@ -43,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Projeto.associate = (models) => {
     Projeto.belongsTo(models.User, { foreignKey: 'clienteId', as: 'cliente' });
+    Projeto.belongsTo(models.User, { foreignKey: 'engenheiroId', as: 'engenheiro' });
     Projeto.hasMany(models.Etapa, { foreignKey: 'projetoId', as: 'etapas' });
     Projeto.hasMany(models.DiarioObra, { foreignKey: 'projetoId', as: 'diarios' });
     Projeto.hasMany(models.Aprovacao, { foreignKey: 'projetoId', as: 'aprovacoes' });

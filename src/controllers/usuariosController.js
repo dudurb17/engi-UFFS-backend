@@ -1,19 +1,15 @@
 const UserModel = require('../models/userModel');
+const { respostaLista } = require('../utils/resposta');
 
 async function listar(req, res) {
   try {
-    const { role } = req.query;
+    const resultado = await UserModel.listarComFiltro(req.query);
 
-    if (role && !UserModel.validarRole(role)) {
-      return res.status(400).json({ erro: 'Perfil inválido' });
+    if (resultado.erro) {
+      return res.status(resultado.status).json({ erro: resultado.erro });
     }
 
-    const usuarios = await UserModel.listar({ role });
-
-    return res.status(200).json({
-      total: usuarios.length,
-      usuarios
-    });
+    return respostaLista(res, resultado.data);
   } catch (err) {
     console.error(err);
     return res.status(500).json({ erro: 'Erro ao listar usuários' });

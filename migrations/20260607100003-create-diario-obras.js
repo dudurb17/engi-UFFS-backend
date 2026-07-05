@@ -17,22 +17,27 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      etapaId: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: { model: 'etapas', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
+      etapa: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       data: {
         type: Sequelize.DATEONLY,
         allowNull: false
       },
+      hora: {
+        type: Sequelize.TIME,
+        allowNull: false
+      },
+      condicaoClimatica: {
+        type: Sequelize.ENUM('ENSOLARADO', 'NUBLADO', 'CHUVOSO', 'PARCIALMENTE_NUBLADO'),
+        allowNull: false
+      },
       descricao: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING,
         allowNull: true
       },
-      clima: {
+      foto: {
         type: Sequelize.STRING,
         allowNull: true
       },

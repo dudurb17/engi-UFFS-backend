@@ -11,19 +11,27 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    etapaId: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+    etapa: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     data: {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
+    hora: {
+      type: DataTypes.TIME,
+      allowNull: false
+    },
+    condicaoClimatica: {
+      type: DataTypes.ENUM('ENSOLARADO', 'NUBLADO', 'CHUVOSO', 'PARCIALMENTE_NUBLADO'),
+      allowNull: false
+    },
     descricao: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       allowNull: true
     },
-    clima: {
+    foto: {
       type: DataTypes.STRING,
       allowNull: true
     }
@@ -34,7 +42,6 @@ module.exports = (sequelize, DataTypes) => {
 
   DiarioObra.associate = (models) => {
     DiarioObra.belongsTo(models.Projeto, { foreignKey: 'projetoId', as: 'projeto' });
-    DiarioObra.belongsTo(models.Etapa, { foreignKey: 'etapaId', as: 'etapa' });
   };
 
   return DiarioObra;

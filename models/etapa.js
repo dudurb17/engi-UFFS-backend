@@ -47,7 +47,6 @@ module.exports = (sequelize, DataTypes) => {
 
   Etapa.associate = (models) => {
     Etapa.belongsTo(models.Projeto, { foreignKey: 'projetoId', as: 'projeto' });
-    Etapa.hasMany(models.DiarioObra, { foreignKey: 'etapaId', as: 'diarios' });
     Etapa.hasMany(models.Aprovacao, { foreignKey: 'etapaId', as: 'aprovacoes' });
   };
 

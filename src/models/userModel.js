@@ -60,11 +60,22 @@ async function validarCredenciais(email, senha) {
   return usuario;
 }
 
+async function listarComFiltro(query = {}) {
+  const { role } = query;
+
+  if (role && !validarRole(role)) {
+    return { erro: 'Perfil inválido', status: 400 };
+  }
+
+  return { data: await listar({ role }) };
+}
+
 module.exports = {
   ROLES_VALIDOS,
   validarRole,
   buscarPorId,
   listar,
+  listarComFiltro,
   emailJaExiste,
   criar,
   validarCredenciais

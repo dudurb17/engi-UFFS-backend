@@ -7,7 +7,7 @@ function listar(req, res) {
     stub: true,
     mensagem: 'Imprevistos (stub)',
     total: 0,
-    aprovacoes: []
+    data: []
   });
 }
 

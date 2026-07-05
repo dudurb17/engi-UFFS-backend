@@ -7,7 +7,7 @@ function listar(req, res) {
     stub: true,
     mensagem: 'Lista de etapas (stub)',
     total: 0,
-    etapas: []
+    data: []
   });
 }
 

@@ -21,6 +21,13 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
+      engenheiroId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'users', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT'
+      },
       endereco: {
         type: Sequelize.STRING,
         allowNull: true
@@ -40,7 +47,7 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
         allowNull: true,
-        defaultValue: 'EM_ANDAMENTO'
+        defaultValue: 'Em execução'
       },
       createdAt: {
         type: Sequelize.DATE,

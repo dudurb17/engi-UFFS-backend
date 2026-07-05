@@ -1,47 +1,5 @@
-const ProjetoModel = require("../models/projetoModel");
-
-const CAMPOS_PERMITIDOS = [
-  "nome",
-  "clienteId",
-  "endereco",
-  "dataInicioPrevista",
-  "prazoDias",
-  "orcamento",
-  "status",
-];
-
-function filtroPorUsuario(usuario) {
-  if (usuario.role === "CLIENTE") {
-    return { clienteId: usuario.id };
-  }
-  return {};
-}
-
-function extrairDados(body) {
-  return CAMPOS_PERMITIDOS.reduce((dados, campo) => {
-    if (body[campo] !== undefined) {
-      dados[campo] = body[campo];
-    }
-    return dados;
-  }, {});
-}
-
-function obterId(req) {
-  return req.query.id;
-}
-
-async function validarCliente(clienteId) {
-  if (!clienteId) {
-    return "Cliente é obrigatório";
-  }
-
-  const existe = await ProjetoModel.clienteExiste(clienteId);
-  if (!existe) {
-    return "Cliente não encontrado";
-  }
-
-  return null;
-}
+const ProjetoModel = require('../models/projetoModel');
+const { respostaLista, respostaItem, respostaMensagem } = require('../utils/resposta');
 
 async function listar(req, res) {
   try {
@@ -49,125 +7,89 @@ async function listar(req, res) {
       return buscar(req, res);
     }
 
-    const projetos = await ProjetoModel.listar(filtroPorUsuario(req.usuario));
-
-    return res.status(200).json({
-      total: projetos.length,
-      projetos,
-    });
+    const projetos = await ProjetoModel.listarPorUsuario(req.usuario, req.query);
+    return respostaLista(res, projetos);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ erro: "Erro ao listar projetos" });
+    return res.status(500).json({ erro: 'Erro ao listar projetos' });
   }
 }
 
 async function buscar(req, res) {
   try {
-    const id = obterId(req);
+    const id = req.query.id;
 
     if (!id) {
-      return res.status(400).json({ erro: "Id é obrigatório" });
+      return res.status(400).json({ erro: 'Id é obrigatório' });
     }
 
-    const projeto = await ProjetoModel.buscarPorId(id);
+    const resultado = await ProjetoModel.buscarPorIdAutorizado(id, req.usuario);
 
-    if (!projeto) {
-      return res.status(404).json({ erro: "Projeto não encontrado" });
+    if (resultado.erro) {
+      return res.status(resultado.status).json({ erro: resultado.erro });
     }
 
-    if (
-      req.usuario.role === "CLIENTE" &&
-      projeto.clienteId !== req.usuario.id
-    ) {
-      return res.status(403).json({ erro: "Permissão insuficiente" });
-    }
-
-    return res.status(200).json(projeto);
+    return respostaItem(res, resultado.data);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ erro: "Erro ao buscar projeto" });
+    return res.status(500).json({ erro: 'Erro ao buscar projeto' });
   }
 }
 
 async function criar(req, res) {
   try {
-    const dados = extrairDados(req.body);
+    const resultado = await ProjetoModel.criarRegistro(req.body, req.usuario);
 
-    if (!dados.nome) {
-      return res.status(400).json({ erro: "Nome da obra é obrigatório" });
+    if (resultado.erro) {
+      return res.status(resultado.status).json({ erro: resultado.erro });
     }
 
-    const erroCliente = await validarCliente(dados.clienteId);
-    if (erroCliente) {
-      return res.status(400).json({ erro: erroCliente });
-    }
-
-    const projeto = await ProjetoModel.criar(dados);
-    const projetoCompleto = await ProjetoModel.buscarPorId(projeto.id);
-
-    return res.status(201).json(projetoCompleto);
+    return respostaItem(res, resultado.data, resultado.status);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ erro: "Erro ao criar projeto" });
+    return res.status(500).json({ erro: 'Erro ao criar projeto' });
   }
 }
 
 async function atualizar(req, res) {
   try {
-    const id = obterId(req);
+    const id = req.query.id;
 
     if (!id) {
-      return res.status(400).json({ erro: "Id é obrigatório" });
+      return res.status(400).json({ erro: 'Id é obrigatório' });
     }
 
-    const projeto = await ProjetoModel.buscarPorId(id);
+    const resultado = await ProjetoModel.atualizarRegistro(id, req.body, req.usuario);
 
-    if (!projeto) {
-      return res.status(404).json({ erro: "Projeto não encontrado" });
+    if (resultado.erro) {
+      return res.status(resultado.status).json({ erro: resultado.erro });
     }
 
-    const dados = extrairDados(req.body);
-
-    if (Object.keys(dados).length === 0) {
-      return res.status(400).json({ erro: "Nenhum dado para atualizar" });
-    }
-
-    if (dados.clienteId !== undefined) {
-      const erroCliente = await validarCliente(dados.clienteId);
-      if (erroCliente) {
-        return res.status(400).json({ erro: erroCliente });
-      }
-    }
-
-    const projetoAtualizado = await ProjetoModel.atualizar(id, dados);
-
-    return res.status(200).json(projetoAtualizado);
+    return respostaItem(res, resultado.data);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ erro: "Erro ao atualizar projeto" });
+    return res.status(500).json({ erro: 'Erro ao atualizar projeto' });
   }
 }
 
 async function remover(req, res) {
   try {
-    const id = obterId(req);
+    const id = req.query.id;
 
     if (!id) {
-      return res.status(400).json({ erro: "Id é obrigatório" });
+      return res.status(400).json({ erro: 'Id é obrigatório' });
     }
 
-    const projeto = await ProjetoModel.buscarPorId(id);
+    const resultado = await ProjetoModel.removerRegistro(id, req.usuario);
 
-    if (!projeto) {
-      return res.status(404).json({ erro: "Projeto não encontrado" });
+    if (resultado.erro) {
+      return res.status(resultado.status).json({ erro: resultado.erro });
     }
 
-    await ProjetoModel.remover(id);
-
-    return res.status(200).json({ mensagem: "Projeto removido" });
+    return respostaMensagem(res, resultado.data.mensagem);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ erro: "Erro ao remover projeto" });
+    return res.status(500).json({ erro: 'Erro ao remover projeto' });
   }
 }
 

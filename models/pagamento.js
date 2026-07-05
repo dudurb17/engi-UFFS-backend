@@ -11,34 +11,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    clienteId: {
-      type: DataTypes.INTEGER,
+    valor: {
+      type: DataTypes.DECIMAL(12, 2),
       allowNull: false
-    },
-    descricao: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    valorTotal: {
-      type: DataTypes.DECIMAL(12, 2),
-      allowNull: true
-    },
-    numeroParcelas: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    valorParcela: {
-      type: DataTypes.DECIMAL(12, 2),
-      allowNull: true
-    },
-    valorPago: {
-      type: DataTypes.DECIMAL(12, 2),
-      allowNull: true,
-      defaultValue: 0
-    },
-    valorEmAberto: {
-      type: DataTypes.DECIMAL(12, 2),
-      allowNull: true
     },
     dataVencimento: {
       type: DataTypes.DATEONLY,
@@ -60,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
 
   Pagamento.associate = (models) => {
     Pagamento.belongsTo(models.Projeto, { foreignKey: 'projetoId', as: 'projeto' });
-    Pagamento.belongsTo(models.User, { foreignKey: 'clienteId', as: 'cliente' });
   };
 
   return Pagamento;

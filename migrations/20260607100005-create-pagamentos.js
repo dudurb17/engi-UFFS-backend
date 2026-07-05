@@ -17,37 +17,9 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      clienteId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'users', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
-      descricao: {
-        type: Sequelize.STRING,
-        allowNull: true
-      },
-      valorTotal: {
+      valor: {
         type: Sequelize.DECIMAL(12, 2),
-        allowNull: true
-      },
-      numeroParcelas: {
-        type: Sequelize.INTEGER,
-        allowNull: true
-      },
-      valorParcela: {
-        type: Sequelize.DECIMAL(12, 2),
-        allowNull: true
-      },
-      valorPago: {
-        type: Sequelize.DECIMAL(12, 2),
-        allowNull: true,
-        defaultValue: 0
-      },
-      valorEmAberto: {
-        type: Sequelize.DECIMAL(12, 2),
-        allowNull: true
+        allowNull: false
       },
       dataVencimento: {
         type: Sequelize.DATEONLY,

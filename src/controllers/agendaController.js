@@ -7,7 +7,7 @@ function listar(req, res) {
     stub: true,
     mensagem: 'Agenda (stub)',
     total: 0,
-    compromissos: []
+    data: []
   });
 }
 
