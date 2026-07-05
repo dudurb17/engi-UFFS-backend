@@ -19,11 +19,18 @@ async function registrar(req, res) {
 
     const usuario = await UserModel.criar({ nome, email, senha, role });
 
+    const token = jwt.sign(
+      { id: usuario.id, role: usuario.role },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '15m' }
+    );
+
     return res.status(201).json({
       id: usuario.id,
       nome: usuario.nome,
       email: usuario.email,
-      role: usuario.role
+      role: usuario.role,
+      token
     });
   } catch (err) {
     console.error(err);

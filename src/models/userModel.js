@@ -19,6 +19,20 @@ async function buscarPorId(id) {
   });
 }
 
+async function listar(filtros = {}) {
+  const where = {};
+
+  if (filtros.role) {
+    where.role = filtros.role;
+  }
+
+  return db.User.findAll({
+    where,
+    attributes: { exclude: ['senha'] },
+    order: [['nome', 'ASC']]
+  });
+}
+
 async function emailJaExiste(email) {
   const usuario = await buscarPorEmail(email);
   return !!usuario;
@@ -50,6 +64,7 @@ module.exports = {
   ROLES_VALIDOS,
   validarRole,
   buscarPorId,
+  listar,
   emailJaExiste,
   criar,
   validarCredenciais

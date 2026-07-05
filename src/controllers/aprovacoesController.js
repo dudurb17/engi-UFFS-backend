@@ -1,4 +1,8 @@
 function listar(req, res) {
+  if (req.query.id) {
+    return buscar(req, res);
+  }
+
   return res.status(200).json({
     stub: true,
     mensagem: 'Aprovações (stub)',
@@ -8,10 +12,16 @@ function listar(req, res) {
 }
 
 function buscar(req, res) {
+  const { id } = req.query;
+
+  if (!id) {
+    return res.status(400).json({ erro: 'Id é obrigatório' });
+  }
+
   return res.status(200).json({
     stub: true,
     mensagem: 'Aprovação encontrada (stub)',
-    id: req.params.id
+    id
   });
 }
 
@@ -24,8 +34,13 @@ function criar(req, res) {
 }
 
 function responder(req, res) {
+  const { id } = req.query;
   const { status, dispositivoId } = req.body;
   const statusValidos = ['APROVADO', 'AJUSTE_SOLICITADO'];
+
+  if (!id) {
+    return res.status(400).json({ erro: 'Id é obrigatório' });
+  }
 
   if (!status || !statusValidos.includes(status)) {
     return res.status(400).json({
@@ -36,17 +51,24 @@ function responder(req, res) {
   return res.status(200).json({
     stub: true,
     mensagem: 'Aprovação atualizada (stub)',
-    id: req.params.id,
-
+    id,
+    status,
+    dispositivoId
   });
 }
 
 function remover(req, res) {
+  const { id } = req.query;
+
+  if (!id) {
+    return res.status(400).json({ erro: 'Id é obrigatório' });
+  }
+
   return res.status(200).json({
     stub: true,
     mensagem: 'Aprovação removida (stub)',
-    id: req.params.id
+    id
   });
 }
 
-module.exports = { listar, buscar, criar, responder, remover };
+module.exports = { listar, criar, responder, remover };

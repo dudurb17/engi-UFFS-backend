@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authRoutes = require('./authRoutes');
+const usuariosRoutes = require('./usuariosRoutes');
 const projetosRoutes = require('./projetosRoutes');
 const etapasRoutes = require('./etapasRoutes');
 const diarioRoutes = require('./diarioObrasRoutes');
@@ -19,6 +20,7 @@ router.get('/health', (req, res) => {
 });
 
 router.use('/auth', authRoutes);
+router.use('/usuarios', usuariosRoutes);
 router.use('/projetos', projetosRoutes);
 router.use('/etapas', etapasRoutes);
 router.use('/diario-obras', diarioRoutes);

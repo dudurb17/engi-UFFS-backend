@@ -1,4 +1,8 @@
 function listar(req, res) {
+  if (req.query.id) {
+    return buscar(req, res);
+  }
+
   return res.status(200).json({
     stub: true,
     mensagem: 'Imprevistos (stub)',
@@ -8,10 +12,16 @@ function listar(req, res) {
 }
 
 function buscar(req, res) {
+  const { id } = req.query;
+
+  if (!id) {
+    return res.status(400).json({ erro: 'Id é obrigatório' });
+  }
+
   return res.status(200).json({
     stub: true,
     mensagem: 'Imprevisto encontrado (stub)',
-    id: req.params.id
+    id
   });
 }
 
@@ -24,20 +34,32 @@ function criar(req, res) {
 }
 
 function atualizar(req, res) {
+  const { id } = req.query;
+
+  if (!id) {
+    return res.status(400).json({ erro: 'Id é obrigatório' });
+  }
+
   return res.status(200).json({
     stub: true,
     mensagem: 'Imprevisto atualizado (stub)',
-    id: req.params.id,
+    id,
     dados: req.body
   });
 }
 
 function remover(req, res) {
+  const { id } = req.query;
+
+  if (!id) {
+    return res.status(400).json({ erro: 'Id é obrigatório' });
+  }
+
   return res.status(200).json({
     stub: true,
     mensagem: 'Imprevisto removido (stub)',
-    id: req.params.id
+    id
   });
 }
 
-module.exports = { listar, buscar, criar, atualizar, remover };
+module.exports = { listar, criar, atualizar, remover };
