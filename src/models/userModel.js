@@ -70,6 +70,51 @@ async function listarComFiltro(query = {}) {
   return { data: await listar({ role }) };
 }
 
+async function registrar({ nome, email, senha, role }) {
+  if (!nome || !email || !senha) {
+    return { erro: 'Nome, e-mail e senha são obrigatórios', status: 400 };
+  }
+
+  if (!validarRole(role)) {
+    return { erro: 'Perfil inválido', status: 400 };
+  }
+
+  if (await emailJaExiste(email)) {
+    return { erro: 'E-mail já cadastrado', status: 409 };
+  }
+
+  const usuario = await criar({ nome, email, senha, role });
+
+  return {
+    data: {
+      id: usuario.id,
+      nome: usuario.nome,
+      email: usuario.email,
+      role: usuario.role
+    },
+    status: 201
+  };
+}
+
+async function login({ email, senha }) {
+  if (!email || !senha) {
+    return { erro: 'E-mail e senha são obrigatórios', status: 400 };
+  }
+
+  const usuario = await validarCredenciais(email, senha);
+
+  if (!usuario) {
+    return { erro: 'Credenciais inválidas', status: 401 };
+  }
+
+  return {
+    data: {
+      id: usuario.id,
+      role: usuario.role
+    }
+  };
+}
+
 module.exports = {
   ROLES_VALIDOS,
   validarRole,
@@ -78,5 +123,7 @@ module.exports = {
   listarComFiltro,
   emailJaExiste,
   criar,
-  validarCredenciais
+  validarCredenciais,
+  registrar,
+  login
 };
