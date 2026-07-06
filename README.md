@@ -1,20 +1,27 @@
 # Engi-UFFS — Backend
 
-Backend de um sistema de gerenciamento de obras para engenheiros autônomos.
+API REST para gerenciamento de obras de engenheiros autônomos.
 
-Disciplina: GEX613 — Programação II (UFFS) — Trabalho Integrador (Entrega I)
+Trabalho Integrador — GEX613 Programação II (UFFS)
 
-## Tecnologias
+## Bibliotecas utilizadas
 
-- Node.js + Express
-- PostgreSQL + Sequelize
-- JWT (autenticação)
-- bcrypt (hash de senha)
-- dotenv e cors
+- **express** — servidor HTTP
+- **sequelize** + **pg** — ORM e conexão com PostgreSQL
+- **jsonwebtoken** — autenticação por token
+- **bcrypt** — criptografia de senha
+- **cors**, **dotenv** — configuração da API e variáveis de ambiente
+- **multer** — upload de fotos no diário de obras (salva em `uploads/diarios/`)
+- **nodemon** — reinício automático em desenvolvimento
 
-## Como rodar o projeto
+## Pré-requisitos
 
-1. Clonar e instalar as dependências:
+- Node.js (v18 ou superior)
+- PostgreSQL instalado e rodando
+
+## Como executar
+
+1. Clonar o repositório e instalar as dependências:
 
 ```bash
 git clone https://github.com/dudurb17/engi-UFFS-backend.git
@@ -22,17 +29,17 @@ cd engi-UFFS-backend
 npm install
 ```
 
-2. Criar o arquivo `.env` a partir do exemplo:
+2. Criar o arquivo de variáveis de ambiente:
 
 ```bash
 cp .env.example .env
 ```
 
-3. Preencher o `.env`:
+Editar o `.env` com os dados do banco e uma chave para o JWT:
 
 ```env
 PORT=3000
-DB_HOST=localhost
+DB_HOST=127.0.0.1
 DB_PORT=5432
 DB_NAME=engi_uffs
 DB_USER=postgres
@@ -41,99 +48,88 @@ JWT_SECRET=
 JWT_EXPIRES_IN=15m
 ```
 
-Para gerar uma chave do `JWT_SECRET`:
+Para gerar o `JWT_SECRET`, rode:
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 ```
 
-4. Criar o banco e rodar as migrations:
+Copie o valor gerado e cole no `.env`.
+
+3. Criar o banco, as tabelas e os dados iniciais:
 
 ```bash
 createdb -h localhost -U postgres engi_uffs
 npm run db:migrate
+npm run db:seed
 ```
 
-5. Iniciar o servidor:
+4. Iniciar o servidor:
 
 ```bash
 npm run dev
 ```
 
-A API roda em `http://localhost:3000`.
+A API fica disponível em `http://localhost:3000`.
+
+## Banco de dados
+
+Os scripts de criação das tabelas estão na pasta `migrations/`. Para aplicá-los:
+
+```bash
+npm run db:migrate
+```
+
+Os dados iniciais para teste ficam em `seeders/` e podem ser inseridos com:
+
+```bash
+npm run db:seed
+```
+
+O seeder cria usuários de exemplo, projetos, etapas e pagamentos. Senha padrão de todos: `123456`.
+
+| E-mail | Perfil |
+| --- | --- |
+| `engenheiro@gmail.com` | ENGENHEIRO |
+| `cliente@uffs.br` | CLIENTE |
+| `bruno@uffs.br` | CLIENTE |
+
+O sistema também aceita o perfil **PARCEIRO** (prestador/parceiro da obra), mas o seeder não cria nenhum usuário desse tipo. Dá para cadastrar pelo `POST /auth/register`.
+
+Para recriar tudo do zero:
+
+```bash
+npm run db:reset
+```
 
 ## Autenticação
 
-As rotas protegidas precisam do header:
+Rotas protegidas exigem o header:
 
 ```
 Authorization: Bearer <token>
 ```
 
-Perfis de usuário: `ENGENHEIRO`, `CLIENTE`, `PARCEIRO`.
+O token é obtido em `POST /auth/login`. Os perfis são **ENGENHEIRO** (administrador), **CLIENTE** (contratante da obra) e **PARCEIRO** (prestador vinculado), cada um com permissões diferentes nas rotas.
 
-Para usar a API: cadastrar em `POST /auth/register`, fazer login em `POST /auth/login` (que retorna o token) e enviar esse token nas demais requisições.
+## Testar no Insomnia
 
-## Rotas
-
-Rotas públicas: `GET /`, `GET /health`, `POST /auth/register`, `POST /auth/login`.
-
-| Módulo      | Prefixo         | Métodos                                 | Acesso                                      |
-| ----------- | --------------- | --------------------------------------- | ------------------------------------------- |
-| Auth        | `/auth`         | POST register, POST login, GET perfil   | perfil: autenticado                         |
-| Dashboard   | `/dashboard`    | GET                                     | ENGENHEIRO                                  |
-| Portal      | `/portal`       | GET                                     | CLIENTE                                     |
-| Projetos    | `/projetos`     | GET, POST, PUT, DELETE                  | escrita: ENGENHEIRO                         |
-| Etapas      | `/etapas`       | GET, POST, PUT, DELETE                  | escrita: ENGENHEIRO                         |
-| Diário      | `/diario-obras` | GET, POST, PUT, DELETE                  | POST: autenticado / PUT, DELETE: ENGENHEIRO |
-| Aprovações  | `/aprovacoes`   | GET, POST, PUT, DELETE                  | POST, DELETE: ENGENHEIRO / PUT: CLIENTE     |
-| Pagamentos  | `/pagamentos`   | GET, POST, PUT, DELETE                  | escrita: ENGENHEIRO                         |
-| Agenda      | `/agenda`       | GET, POST, PUT, DELETE, POST /solicitar | escrita: ENGENHEIRO / solicitar: CLIENTE    |
-| Imprevistos | `/imprevistos`  | GET, POST, PUT, DELETE                  | POST: autenticado / PUT, DELETE: ENGENHEIRO |
-
-Nesta entrega a maioria das rotas retorna uma resposta simples (stub), sem a lógica de negócio completa.
-
-## Requests de exemplo (Insomnia)
-
-As requests de teste estão no arquivo exportado do Insomnia:
+As requests de exemplo estão em:
 
 ```
-insomnia/Insomnia_2026-06-07.yaml
+insomnia/Insomnia_2026-07-05.yaml
 ```
 
 Para importar: Insomnia → Import → selecionar o arquivo.
 
-O token é tratado automaticamente: ao fazer o `POST /auth/login`, um script salva o token retornado na variável de ambiente `token`, e as demais rotas já usam esse token no header `Authorization: Bearer {{token}}`. Não é preciso copiar o token em cada request.
+Ao fazer o `POST /auth/login`, o token é salvo automaticamente na variável `token`, e as demais rotas já usam `Authorization: Bearer {{token}}`.
 
-Importante: antes de testar qualquer rota autenticada, faça o login primeiro, para que a variável `token` seja preenchida.
-
-Ordem sugerida para testar:
+Ordem sugerida:
 
 1. `GET /health`
-2. `POST /auth/register`
-3. `POST /auth/login` (preenche a variável `token` automaticamente)
-4. Demais rotas autenticadas (o token já é enviado automaticamente)
-
-## Estrutura de diretórios
-
-```
-engi-UFFS/
-├── config/          # configuração do banco (Sequelize)
-├── migrations/      # criação das tabelas
-├── models/          # models do Sequelize
-├── src/
-│   ├── controllers/ # recebe a requisição e devolve a resposta
-│   ├── middlewares/ # autenticar, autorizar, tratamento de erros
-│   ├── models/      # regras de negócio (ex: userModel)
-│   ├── routes/      # definição das rotas
-│   └── app.js       # configuração do Express
-├── index.js         # inicialização do servidor
-├── .env.example
-└── package.json
-```
+2. `POST /auth/login`
+3. Demais rotas autenticadas
 
 ## Autor
 
-- Eduardo Robetti Bedin
-
-Obs.: o levantamento de requisitos foi feito em grupo na disciplina de Engenharia de Software, mas meus colegas de grupo não cursam Programação II, então o desenvolvimento está sendo feito individualmente. Pelo escopo levantado, percebo que o trabalho talvez fique grande demais para ser concluído por uma única pessoa, mas pretendo desenvolver o máximo possível.
+Eduardo Robetti Bedin

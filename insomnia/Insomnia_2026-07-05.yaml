@@ -1,0 +1,669 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: MINHA API UFFS
+meta:
+  id: wrk_c025e50389bf4983b62542f206990eed
+  created: 1775428851170
+  modified: 1775428851170
+  description: ""
+collection:
+  - url: http://localhost:3000/health
+    name: health
+    meta:
+      id: req_52a27d7c8e7446acb874416f3fa55ef7
+      created: 1780784106171
+      modified: 1780784145599
+      isPrivate: false
+      description: ""
+      sortKey: -1780784106171
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/12.5.0
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - name: Auth
+    meta:
+      id: fld_04dea539ae7849cea08d412fa4a92175
+      created: 1780784218513
+      modified: 1783295393352
+      sortKey: -1780784218513
+      description: ""
+    children:
+      - url: http://localhost:3000/auth/login
+        name: Login
+        meta:
+          id: req_6aaf32826eb04117835dbc130f27c9f2
+          created: 1780784187420
+          modified: 1783221661187
+          isPrivate: false
+          description: ""
+          sortKey: -1780784231495
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email":"engenheiro@gmail.com",
+            	"senha":"123456"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        scripts:
+          afterResponse: |-
+            const jsonBody = insomnia.response.json();
+            insomnia.environment.set("token", jsonBody.token);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/auth/perfil
+        name: Perfil
+        meta:
+          id: req_bd94b7f05600423397702320419fbcc6
+          created: 1780784256657
+          modified: 1780788240470
+          isPrivate: false
+          description: ""
+          sortKey: -1780784231595
+        method: GET
+        body:
+          mimeType: application/json
+          text: ""
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/auth/register
+        name: Register
+        meta:
+          id: req_47cc5c189bb945c9960db8a7eb4be726
+          created: 1780785525075
+          modified: 1783200012882
+          isPrivate: false
+          description: ""
+          sortKey: -1780784231695
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            
+            {
+              "nome": "eduardo Bedin as",
+              "email": "engenheiroa@gmail.com",
+              "senha": "123455asd",
+              "role": "ENGENHEIRO"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Projetos
+    meta:
+      id: fld_7b3fc9a87f8846c0bc05d50589cc4b6b
+      created: 1780799754381
+      modified: 1780801780043
+      sortKey: -1780799754381
+      description: ""
+    children:
+      - url: http://localhost:3000/projetos
+        name: listar
+        meta:
+          id: req_979067200e25417f9361e867e0ae5f14
+          created: 1780799831708
+          modified: 1780799874778
+          isPrivate: false
+          description: ""
+          sortKey: -1780799833380
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/projetos
+        name: criar
+        meta:
+          id: req_5b60e86843d0439ba1b6b24fb2a4ad73
+          created: 1780799935009
+          modified: 1783215032688
+          isPrivate: false
+          description: ""
+          sortKey: -1780799833480
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome": "teste",
+            	"clienteId":10, 
+              "endereco": "Rua Teste",
+            	"dataInicioPrevista": "{% faker 'randomDateFuture' %}",
+            	"prazo": 23,
+            	"orcamento": "23423"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/projetos
+        name: editar
+        meta:
+          id: req_9cc6bb3a484448bc8dca6d74fcd99d80
+          created: 1780800552013
+          modified: 1783295692339
+          isPrivate: false
+          description: ""
+          sortKey: -1780799833580
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "Reforma Residencial Centro - Fase 2",
+              "prazoDias": 120,
+              "orcamento": 95000.00,
+              "status": "Em execução"
+            }
+        parameters:
+          - name: id
+            value: "1"
+            description: ""
+            disabled: false
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "http://localhost:3000/projetos "
+        name: deletar
+        meta:
+          id: req_760c995cbe424a85a102165683776e6a
+          created: 1780800785309
+          modified: 1783295702505
+          isPrivate: false
+          description: ""
+          sortKey: -1780799833680
+        method: DELETE
+        parameters:
+          - name: id
+            value: "1"
+            description: ""
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Diario de Obras
+    meta:
+      id: fld_88fe10e98ba5414e9f96e20b772a2e94
+      created: 1780801833873
+      modified: 1780801833873
+      sortKey: -1780800669091
+      description: ""
+    children:
+      - url: http://localhost:3000/diario-obras
+        name: listar
+        meta:
+          id: req_0a218d9f783041f7956c5a8eb0c81006
+          created: 1780801833873
+          modified: 1783295576227
+          isPrivate: false
+          description: ""
+          sortKey: -1780801169895
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/diario-obras
+        name: deletar
+        meta:
+          id: req_61bcf4510cb34e3fb4ab30878e6ede10
+          created: 1780801833873
+          modified: 1783295592507
+          isPrivate: false
+          description: ""
+          sortKey: -1780801170045
+        method: DELETE
+        parameters:
+          - name: id
+            value: "1"
+            description: ""
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/diario-obras
+        name: editar
+        meta:
+          id: req_61cbed2b75b54d54bb295de319021961
+          created: 1780801833873
+          modified: 1783295633973
+          isPrivate: false
+          description: ""
+          sortKey: -1780801170095
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "etapa": "Instalações elétricas - finalização",
+              "data": "2026-07-21",
+              "hora": "16:00:00",
+              "condicaoClimatica": "NUBLADO",
+              "descricao": "Finalização da fiação e testes."
+            }
+        parameters:
+          - name: id
+            value: "1"
+            description: ""
+            disabled: false
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/diario-obras
+        name: criar
+        meta:
+          id: req_b78755066a86425cbd0f0641868fd9c9
+          created: 1780801833873
+          modified: 1783295581677
+          isPrivate: false
+          description: ""
+          sortKey: -1780801169995
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "projetoId": 1,
+              "etapa": "Instalações elétricas",
+              "data": "2026-07-20",
+              "hora": "14:30:00",
+              "condicaoClimatica": "ENSOLARADO",
+              "descricao": "Instalação dos quadros elétricos no térreo."
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Pagamentos
+    meta:
+      id: fld_bb10988617b84476ac950644efa48298
+      created: 1780802302571
+      modified: 1780802302571
+      sortKey: -1780801030608.25
+      description: ""
+    children:
+      - url: http://localhost:3000/pagamentos
+        name: criar
+        meta:
+          id: req_1c64a8b2182b4c16b70f22beb49644b9
+          created: 1780802302571
+          modified: 1783295475547
+          isPrivate: false
+          description: ""
+          sortKey: -1780801169995
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "projetoId": 1,
+              "valor": 25000.00,
+              "dataVencimento": "2026-07-10",
+              "dataPagamento": "2026-07-09",
+              "status": "PAGO"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/pagamentos
+        name: editar
+        meta:
+          id: req_596ca323b559461796d8c98392c3f225
+          created: 1780802302571
+          modified: 1783295522165
+          isPrivate: false
+          description: ""
+          sortKey: -1780801170095
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "valor": 30000.00,
+              "dataVencimento": "2026-08-15",
+              "dataPagamento": null,
+              "status": "PENDENTE"
+            }
+        parameters:
+          - name: id
+            value: "2"
+            description: ""
+            disabled: false
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/pagamentos
+        name: listar
+        meta:
+          id: req_efc1698920404cf78c04e1290d1c44cd
+          created: 1780802302571
+          modified: 1780802302571
+          isPrivate: false
+          description: ""
+          sortKey: -1780801169895
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/pagamentos
+        name: deletar
+        meta:
+          id: req_f86ffff8e6ba4026bebc0cfc92198afd
+          created: 1780802302571
+          modified: 1783295487731
+          isPrivate: false
+          description: ""
+          sortKey: -1780801170045
+        method: DELETE
+        parameters:
+          - name: id
+            value: "1"
+            description: ""
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Dashboard
+    meta:
+      id: fld_2ed82af8adac4d189cb4d31234a33105
+      created: 1780803186380
+      modified: 1780803186380
+      sortKey: -1780803186380
+      description: ""
+    children:
+      - url: http://localhost:3000/dashboard
+        name: listar
+        meta:
+          id: req_7efb2535c14946bf8baebd61c43ffb30
+          created: 1780803192084
+          modified: 1780803222866
+          isPrivate: false
+          description: ""
+          sortKey: -1780803193310
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Usuarios
+    meta:
+      id: fld_b1b06a641a1b44ccbec2e20c40a02930
+      created: 1783213407688
+      modified: 1783213407688
+      sortKey: -1783213407688
+      description: ""
+    children:
+      - url: http://localhost:3000/usuarios
+        name: listar
+        meta:
+          id: req_b4aa63b167f346998636ad4e6e121616
+          created: 1783213415456
+          modified: 1783213512959
+          isPrivate: false
+          description: ""
+          sortKey: -1783213468105
+        method: GET
+        parameters:
+          - name: role
+            value: CLIENTE
+            description: ""
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{token}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_0acbf55c2e49cfb134b7199ae6eb46cf1bd2c6f5
+    created: 1775428851176
+    modified: 1783295393350
+environments:
+  name: Base Environment
+  meta:
+    id: env_0acbf55c2e49cfb134b7199ae6eb46cf1bd2c6f5
+    created: 1775428851175
+    modified: 1783295393351
+    isPrivate: false
+  data:
+    "": ""
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkVOR0VOSEVJUk8iLCJpYXQiOjE3ODMyOTUzOTMsImV4cCI6MTc4MzI5NjI5M30.zWM5VjFzPtZhO5pgUIXGj1JQoQ29oSL4Y9hhJqTCrYs
